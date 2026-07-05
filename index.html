@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Catálogo de venta Maranello</title>
+<meta name="description" content="Catálogo comercial Maranello con equipos, mobiliario y tecnología disponibles para venta.">
+<style>
+:root{
+  --bg:#0d0b08;
+  --panel:#17120d;
+  --card:#211810;
+  --soft:#f7f0e6;
+  --muted:#b8a896;
+  --accent:#f4b400;
+  --accent2:#efc56f;
+  --blue:#164b86;
+  --line:rgba(255,255,255,.12);
+  --ok:#21c56b;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; font-family:Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background:radial-gradient(circle at top left, #35220e 0, var(--bg) 42%, #070605 100%);
+  color:var(--soft);
+}
+a{color:inherit}
+.hero{
+  position:relative; overflow:hidden; padding:32px 18px 26px; border-bottom:1px solid var(--line);
+}
+.hero::after{
+  content:""; position:absolute; right:-140px; top:-140px; width:420px; height:420px; border-radius:50%;
+  background:rgba(244,180,0,.18); filter:blur(3px);
+}
+.wrap{max-width:1180px; margin:0 auto; position:relative; z-index:1;}
+.brand{display:flex; align-items:center; justify-content:flex-start; margin-bottom:18px;}
+.brand-logo{
+  width:min(150px,38vw); aspect-ratio:1/1; height:auto; object-fit:cover; border-radius:50%; display:block;
+  box-shadow:0 18px 45px rgba(0,0,0,.30); border:4px solid rgba(255,255,255,.10);
+}
+.btn-wa{background:#25D366 !important; color:#fff !important; border:1px solid rgba(0,0,0,.06) !important; box-shadow:0 10px 24px rgba(37,211,102,.28) !important;}
+.btn-wa:hover{filter:brightness(1.02)}
+.btn-wa svg{width:18px; height:18px; display:block; flex:0 0 18px}
+.btn-wa .wa-text{display:inline-flex; align-items:center; gap:8px}
+.wa-float{position:fixed; right:18px; bottom:18px; z-index:40; text-decoration:none;}
+.wa-float .btn{padding:14px 18px; font-size:15px}
+h1{font-size:clamp(32px,5.8vw,62px); line-height:1; margin:8px 0 12px; letter-spacing:-.045em; max-width:940px;}
+.lead{font-size:clamp(16px,2.1vw,22px); color:#eadfce; max-width:900px; line-height:1.42; margin:0 0 20px;}
+.hero-actions{display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin:20px 0 8px;}
+.btn{
+  border:0; border-radius:999px; padding:12px 18px; font-weight:800; cursor:pointer; text-decoration:none; display:inline-flex; gap:8px; align-items:center;
+  background:var(--accent); color:#160f07; box-shadow:0 12px 30px rgba(0,0,0,.28);
+}
+.btn.secondary{background:rgba(255,255,255,.08); color:var(--soft); border:1px solid var(--line); box-shadow:none}
+.stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; margin-top:24px; max-width:820px;}
+.stat{background:rgba(255,255,255,.07); border:1px solid var(--line); border-radius:18px; padding:15px; backdrop-filter:blur(8px)}
+.stat span{display:block; color:var(--muted); font-size:13px; margin-bottom:6px}
+.stat strong{font-size:24px}
+.toolbar{
+  position:sticky; top:0; z-index:20; background:rgba(13,11,8,.90); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line); padding:14px 18px;
+}
+.controls{max-width:1180px; margin:0 auto; display:grid; grid-template-columns:1.6fr .8fr .8fr; gap:10px;}
+input,select{
+  width:100%; border:1px solid var(--line); border-radius:14px; padding:13px 14px; color:var(--soft);
+  background:#17120d; outline:none; font-size:15px;
+}
+main{padding:26px 18px 42px;}
+.grid{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px;}
+.card{
+  background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.028));
+  border:1px solid var(--line); border-radius:24px; overflow:hidden; box-shadow:0 18px 50px rgba(0,0,0,.22);
+  display:flex; flex-direction:column; min-height:100%;
+}
+.photo{position:relative; height:250px; background:#0c0906; overflow:hidden; cursor:pointer}
+.photo img{width:100%; height:100%; object-fit:cover; display:block; transition:transform .25s ease;}
+.card:hover .photo img{transform:scale(1.035)}
+.photo-gallery{touch-action:pan-y; cursor:grab}
+.photo-gallery:active{cursor:grabbing}
+.gallery-track{height:100%; display:flex; overflow-x:auto; overflow-y:hidden; scroll-snap-type:x mandatory; scroll-behavior:smooth; -webkit-overflow-scrolling:touch; scrollbar-width:none}
+.gallery-track::-webkit-scrollbar{display:none}
+.gallery-track img{min-width:100%; flex:0 0 100%; scroll-snap-align:center; scroll-snap-stop:always; object-fit:cover; cursor:pointer}
+.gallery-dots{position:absolute; left:0; right:0; bottom:10px; display:flex; justify-content:center; gap:6px; pointer-events:auto; z-index:3}
+.gallery-dot{width:8px; height:8px; border-radius:999px; border:0; background:rgba(255,255,255,.48); padding:0; cursor:pointer}
+.gallery-dot.active{background:var(--accent); width:20px}
+.gallery-nav{position:absolute; top:50%; transform:translateY(-50%); z-index:4; width:34px; height:44px; border:1px solid rgba(255,255,255,.22); border-radius:999px; background:rgba(0,0,0,.42); color:#fff; font-size:26px; line-height:1; display:grid; place-items:center; cursor:pointer; backdrop-filter:blur(5px)}
+.gallery-nav.prev{left:9px}
+.gallery-nav.next{right:9px}
+.badge{
+  position:absolute; left:12px; top:12px; background:rgba(0,0,0,.65); color:#fff; border:1px solid rgba(255,255,255,.2);
+  padding:6px 10px; border-radius:999px; font-size:12px; font-weight:800;
+}
+.count{
+  position:absolute; right:12px; top:12px; background:rgba(244,180,0,.95); color:#1a1006; border-radius:999px; padding:6px 9px; font-weight:900; font-size:12px;
+}
+.content{padding:17px; display:flex; flex-direction:column; gap:10px; flex:1}
+.category{font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent2); font-weight:850}
+.card h2{font-size:21px; line-height:1.1; margin:0}
+.short{color:#d9ccb9; line-height:1.42; margin:0}
+.price-row{display:flex; justify-content:space-between; align-items:flex-end; gap:10px; margin-top:auto}
+.price{font-size:26px; font-weight:950; color:#fff}
+.condition{font-size:12px; color:var(--muted); text-align:right}
+.tags{display:flex; gap:7px; flex-wrap:wrap}
+.tag{font-size:12px; color:#e8d9c4; background:rgba(255,255,255,.07); border:1px solid var(--line); padding:5px 8px; border-radius:999px}
+.actions{display:flex; gap:8px; margin-top:6px}
+.actions .btn{flex:1; justify-content:center; padding:11px 10px; font-size:14px}
+.note{
+  margin:22px auto 0; max-width:1180px; color:#dacbb6; line-height:1.55; border:1px solid var(--line);
+  background:rgba(255,255,255,.05); border-radius:18px; padding:16px;
+}
+.footer{padding:22px 18px 34px; color:var(--muted); text-align:center; border-top:1px solid var(--line)}
+.modal{position:fixed; inset:0; background:rgba(0,0,0,.82); display:none; z-index:50; align-items:center; justify-content:center; padding:16px}
+.modal.open{display:flex}
+.modal-box{width:min(1040px,96vw); max-height:92vh; overflow:auto; border-radius:22px; background:#110d09; border:1px solid var(--line)}
+.modal-top{display:flex; justify-content:space-between; gap:12px; align-items:center; padding:12px 14px; border-bottom:1px solid var(--line)}
+.close{background:rgba(255,255,255,.08); color:var(--soft); border:1px solid var(--line); border-radius:999px; padding:9px 12px; cursor:pointer}
+.modal-main{display:grid; grid-template-columns:1.15fr .85fr; gap:0}
+.modal-image{background:#050403; min-height:420px; display:grid; place-items:center; position:relative; touch-action:pan-y}
+.modal-image img{max-width:100%; max-height:76vh; object-fit:contain}
+.modal-nav{position:absolute; top:50%; transform:translateY(-50%); z-index:2; width:44px; height:54px; border:1px solid rgba(255,255,255,.2); border-radius:999px; background:rgba(0,0,0,.45); color:#fff; font-size:34px; cursor:pointer; display:grid; place-items:center}
+.modal-prev{left:12px}
+.modal-next{right:12px}
+.modal-counter{position:absolute; right:12px; bottom:12px; z-index:2; background:rgba(0,0,0,.58); color:#fff; border:1px solid rgba(255,255,255,.18); border-radius:999px; padding:6px 10px; font-size:12px; font-weight:850}
+.modal-info{padding:18px; display:flex; flex-direction:column; gap:12px}
+.thumbs{display:flex; gap:8px; flex-wrap:wrap}
+.thumbs img{width:72px; height:58px; object-fit:cover; border-radius:10px; border:2px solid transparent; cursor:pointer}
+.thumbs img.active{border-color:var(--accent)}
+.empty{display:none; text-align:center; padding:44px 10px; color:var(--muted);}
+
+.status-pill{position:absolute; left:12px; bottom:12px; z-index:5; border-radius:999px; padding:7px 10px; font-size:12px; font-weight:950; letter-spacing:.02em; border:1px solid rgba(255,255,255,.22); box-shadow:0 8px 20px rgba(0,0,0,.25)}
+.status-disponible{background:rgba(33,197,107,.96); color:#071308}
+.status-separado{background:rgba(244,180,0,.96); color:#1a1006}
+.status-vendido{background:rgba(210,55,55,.96); color:#fff}
+.opportunity{position:absolute; right:12px; bottom:12px; z-index:5; background:rgba(244,180,0,.96); color:#1a1006; border-radius:999px; padding:7px 10px; font-size:12px; font-weight:950; box-shadow:0 8px 20px rgba(0,0,0,.25)}
+.commercial-strip{display:flex; flex-wrap:wrap; gap:10px; margin-top:16px; color:#eadfce}
+.commercial-chip{display:inline-flex; align-items:center; gap:7px; border:1px solid var(--line); background:rgba(255,255,255,.07); padding:9px 12px; border-radius:999px; font-weight:750; font-size:14px}
+
+@media (max-width:920px){
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .controls{grid-template-columns:1fr}
+  .modal-main{grid-template-columns:1fr}
+  .modal-image{min-height:280px}
+}
+@media (max-width:620px){
+  .hero{padding-top:24px}
+  .grid{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr}
+  .photo{height:245px}
+  .price{font-size:24px}
+  .gallery-nav{display:none}
+  .modal-nav{width:40px; height:48px; font-size:30px}
+}
+@media print{
+  .toolbar,.hero-actions,.actions,.footer,.modal,.wa-float{display:none!important}
+  body{background:#fff;color:#111}
+  .hero,.card,.note{border-color:#ddd;background:#fff;color:#111;box-shadow:none}
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .short,.lead,.condition,.footer,.note,.price,.category,.card h2{color:#333 !important}
+  .tag{color:#333 !important; background:#f4f4f4; border-color:#ddd}
+  .badge,.count,.status-pill,.opportunity{color:#111 !important; background:#f1f1f1 !important; border-color:#ccc !important; box-shadow:none}
+}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="brand">
+      <img src="assets/logo.jpg" alt="Maranello Pasta" class="brand-logo">
+    </div>
+    <h1>Equipos y mobiliario disponibles para venta</h1>
+    <p class="lead">Catálogo comercial con fotos reales, precios actualizados y consulta por WhatsApp. Productos usados de restaurante, refrigeración, tecnología y mobiliario en acero inoxidable.</p>
+    <div class="hero-actions">
+      <a class="btn" href="#catalogo">Ver catálogo</a>
+      <a class="btn btn-wa" href="#" onclick="shareCatalog(); return false;"><span class="wa-text"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M19.1 17.3c-.3-.2-1.6-.8-1.9-.9-.3-.1-.5-.2-.8.2-.2.3-.8.9-1 1.1-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.6-1.7-1-1-1.7-2.2-1.8-2.5-.2-.3 0-.5.1-.7.1-.1.3-.4.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.1-.8-1.8-1.1-2.5-.3-.7-.6-.6-.8-.6h-.7c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.7.7.7.2 1.4.2 1.9.1.6-.1 1.6-.7 1.8-1.4.2-.7.2-1.2.2-1.3-.1-.1-.3-.2-.6-.4z"/><path fill="currentColor" d="M27.3 4.6A15.8 15.8 0 0 0 2.4 23.7L0 32l8.5-2.2A15.8 15.8 0 1 0 27.3 4.6zm-11.1 24c-2.3 0-4.4-.6-6.3-1.7l-.4-.2-5.1 1.3 1.4-5-.3-.4a13.1 13.1 0 1 1 10.7 6z"/></svg>Compartir por WhatsApp</span></a>
+      <button class="btn secondary" onclick="window.print()">Imprimir / guardar PDF</button>
+    </div>
+    <div class="commercial-strip">
+      <span class="commercial-chip">📍 Cali – información y visita por WhatsApp</span>
+      <span class="commercial-chip">🚚 Retiro en sitio / entrega a coordinar</span>
+      <span class="commercial-chip">✅ Productos disponibles sujetos a confirmación</span>
+    </div>
+    <div class="stats">
+      <div class="stat"><span>Productos publicados</span><strong>14</strong></div>
+      <div class="stat"><span>Actualizado</span><strong>04/07/2026</strong></div>
+    </div>
+  </div>
+</header>
+
+<section class="toolbar">
+  <div class="controls">
+    <input id="search" placeholder="Buscar producto, categoría o descripción..." oninput="renderProducts()">
+    <select id="category" onchange="renderProducts()"></select>
+    <select id="sort" onchange="renderProducts()">
+      <option value="item">Orden original</option>
+      <option value="priceAsc">Precio menor a mayor</option>
+      <option value="priceDesc">Precio mayor a menor</option>
+      <option value="name">Nombre A-Z</option>
+    </select>
+  </div>
+</section>
+
+<main id="catalogo">
+  <div class="wrap">
+    <div id="grid" class="grid"></div>
+    <div id="empty" class="empty">No se encontraron productos con ese filtro.</div>
+    <div class="note"><strong>Nota comercial:</strong> ubicación general: <strong>Cali</strong>. Información, visita, disponibilidad y negociación por WhatsApp. Retiro en sitio o entrega a coordinar. Se recomienda verificar funcionamiento antes de cerrar la compra.</div>
+  </div>
+</main>
+
+<a class="wa-float" target="_blank" rel="noopener" href="https://wa.me/573117640437?text=Hola%2C%20me%20interesa%20el%20cat%C3%A1logo%20de%20Maranello.%20%C2%BFA%C3%BAn%20hay%20productos%20disponibles%3F"><span class="btn btn-wa"><span class="wa-text"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M19.1 17.3c-.3-.2-1.6-.8-1.9-.9-.3-.1-.5-.2-.8.2-.2.3-.8.9-1 1.1-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.6-1.7-1-1-1.7-2.2-1.8-2.5-.2-.3 0-.5.1-.7.1-.1.3-.4.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.1-.8-1.8-1.1-2.5-.3-.7-.6-.6-.8-.6h-.7c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.7.7.7.2 1.4.2 1.9.1.6-.1 1.6-.7 1.8-1.4.2-.7.2-1.2.2-1.3-.1-.1-.3-.2-.6-.4z"/><path fill="currentColor" d="M27.3 4.6A15.8 15.8 0 0 0 2.4 23.7L0 32l8.5-2.2A15.8 15.8 0 1 0 27.3 4.6zm-11.1 24c-2.3 0-4.4-.6-6.3-1.7l-.4-.2-5.1 1.3 1.4-5-.3-.4a13.1 13.1 0 1 1 10.7 6z"/></svg>Escríbenos en WhatsApp</span></span></a>
+
+<div class="footer">Catálogo Maranello · Fotos reales de los productos · Página estática para compartir.</div>
+
+<div id="modal" class="modal" onclick="if(event.target.id==='modal') closeModal()">
+  <div class="modal-box">
+    <div class="modal-top"><strong id="modalTitle">Producto</strong><button class="close" onclick="closeModal()">Cerrar</button></div>
+    <div class="modal-main">
+      <div class="modal-image" id="modalImageBox">
+        <button class="modal-nav modal-prev" onclick="modalPrev(event)" aria-label="Foto anterior">‹</button>
+        <img id="modalImg" alt="">
+        <button class="modal-nav modal-next" onclick="modalNext(event)" aria-label="Foto siguiente">›</button>
+        <div class="modal-counter" id="modalCounter">1 / 1</div>
+      </div>
+      <div class="modal-info">
+        <div class="category" id="modalCategory"></div>
+        <h2 id="modalName"></h2>
+        <div class="price" id="modalPrice"></div>
+        <p id="modalDesc" class="short"></p>
+        <div id="modalTags" class="tags"></div>
+        <div id="modalThumbs" class="thumbs"></div>
+        <a id="modalWhats" class="btn btn-wa" target="_blank" rel="noopener"><span class="wa-text"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M19.1 17.3c-.3-.2-1.6-.8-1.9-.9-.3-.1-.5-.2-.8.2-.2.3-.8.9-1 1.1-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.6-1.7-1-1-1.7-2.2-1.8-2.5-.2-.3 0-.5.1-.7.1-.1.3-.4.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.1-.8-1.8-1.1-2.5-.3-.7-.6-.6-.8-.6h-.7c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.7.7.7.2 1.4.2 1.9.1.6-.1 1.6-.7 1.8-1.4.2-.7.2-1.2.2-1.3-.1-.1-.3-.2-.6-.4z"/><path fill="currentColor" d="M27.3 4.6A15.8 15.8 0 0 0 2.4 23.7L0 32l8.5-2.2A15.8 15.8 0 1 0 27.3 4.6zm-11.1 24c-2.3 0-4.4-.6-6.3-1.7l-.4-.2-5.1 1.3 1.4-5-.3-.4a13.1 13.1 0 1 1 10.7 6z"/></svg>Consultar por WhatsApp</span></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const PRODUCTS_DATA = [{"item": 1, "category": "Tecnología", "name": "Proyector Epson", "short": "Proyector Epson PowerLite W39 en excelente estado, con poco uso.", "description": "Proyector Epson PowerLite W39 en excelente estado, con poco uso. Proyecta con 3.500 lúmenes de brillo (blanco y color), resolución WXGA HD (1280 × 800), ofreciendo imágenes nítidas, brillantes y de gran calidad, incluso en ambientes con iluminación. Cuenta con conexión HDMI, USB y LAN, ideal para presentaciones empresariales, aulas de clase, iglesias, salas de reuniones y entretenimiento en casa.", "price": 1500000, "priceText": "$1.500.000", "condition": "Usado / buen estado", "tags": ["Tecnología", "Usado", "Fotos reales"], "message": "Hola, me interesa el producto 01: Proyector Epson por $1.500.000. ¿Sigue disponible?", "status": "Disponible", "images": ["assets/producto-01-1.jpg", "assets/producto-01-2.jpg", "assets/producto-01-3.jpg", "assets/producto-01-4.jpg"]}, {"item": 2, "category": "Cocina industrial", "name": "Horno industrial a gas en acero inoxidable", "short": "Horno industrial a gas en acero inoxidable 70x60x 150 cm, de dos niveles/compartimentos.", "description": "Horno industrial a gas en acero inoxidable 70x60x 150 cm, de dos niveles/compartimentos. Ideal para restaurante, panadería, comidas rápidas o producción gastronómica, regulador de llama, ruedas de seguridad.", "price": 980000, "priceText": "$980.000", "condition": "Usado / oportunidad", "highlight": "Oportunidad", "tags": ["Cocina industrial", "Usado", "Fotos reales"], "message": "Hola, me interesa el producto 02: Horno industrial a gas en acero inoxidable por $980.000. ¿Sigue disponible?", "status": "Disponible", "images": ["assets/producto-02-1.jpg"]}, {"item": 3, "category": "Refrigeración", "name": "Nevera congelador vertical en acero inoxidable", "short": "Nevera/congelador vertical en acero inoxidable, 210cm alto x 110 cm ancho, 80 cm profundidad, con dos puertas  y ampl...", "description": "Nevera/congelador vertical en acero inoxidable, 210cm alto x 110 cm ancho, 80 cm profundidad, con dos puertas  y amplio espacio interno (3/4 usado como refrigerador y 1/4 usado como congelador). Ideal para conservación de alimentos y bebidas en restaurante o negocio.", "price": 8750000, "priceText": "$8.750.000", "condition": "Usado / buen estado", "tags": ["Refrigeración", "Usado", "Fotos reales"], "message": "Hola, me interesa el producto 03: Nevera congelador vertical en acero inoxidable por $8.750.000. ¿Sigue disponible?", "status": "Disponible", "images": ["assets/producto-03-1.jpg", "assets/producto-03-2.jpg", "assets/producto-03-3.jpg"]}, {"item": 4, "category": "Mobiliario acero", "name": "Repisa en acero inoxidable 130 × 35 cm", "short": "Repisa/entrepaño en acero inoxidable de 130 × 35 cm.", "description": "Repisa/entrepaño en acero inoxidable de 130 × 35 cm. Ideal para cocina, mise en place, almacenamiento o apoyo operativo.", "price": 250000, "priceText": "$250.000", "condition": "Usado / buen estado", "tags": ["Mobiliario acero", "Usado", "Fotos reales"], "message": "Hola, me interesa el producto 04: Repisa en acero inoxidable 130 × 35 cm por $250.000. ¿Sigue disponible?", "status": "Disponible", "images": ["assets/producto-04-1.jpg"]}, {"item": 5, "category": "Tecnología", "name": "Computador Lenovo todo en uno con monitor 21” + base", "short": "Computador Lenovo todo en uno con monitor de 21” (Intel core i5 8th gen), teclado, mouse y base/soporte.", "description": "Computador Lenovo todo en uno con monitor de 21” (Intel core i5 8th gen), teclado, mouse y base/soporte. Ideal para punto de venta, caja, facturación o administración.", "price": 1500000, "priceText": "$1.500.000", "condition": "Usado / funcional", "tags": ["Tecnología", "Usado", "Fotos reales"], "message": "Hola, me interesa el producto 05: Computador Lenovo todo en uno con monitor 21” + base por $1.500.000. ¿Sigue disponible?", "status": "Disponible", "images": ["assets/producto-05-1.jpg", "assets/producto-05-2.jpg", "assets/producto-05-3.jpg"]}, {"item": 6, "category": "Cocina industrial", "name": "Estufa industrial a gas de 5 boquillas", "short": "Estufa industrial a gas en acero inoxidable de 5 puestos: 3 boquillas de 12 cm y 2 boquillas de 20 cm.", "description": "Estufa industrial a gas en acero inoxidable de 5 puestos: 3 boquillas de 12 cm y 2 boquillas de 20 cm. Ideal para cocina de restaurante. Mesa con entrepaño y 4 ruedas de seguridad en perfecto estado.", "price": 2500000, "priceText": "$2.500.000", "condition": "Usado / oportunidad", "highlight": "Oportunidad", "tags": ["Cocina industrial", "Usado", "Fotos reales"], "message": "Hola, me interesa el producto 06: Estufa industrial a gas de 5 boquillas por $2.500.000. ¿Sigue disponible?", "status": "Disponible", "images": ["assets/producto-06-1.jpg"]}, {"item": 7, "category": "Refrigeración", "name": "Congelador horizontal Challenger", "short": "Congelador horizontal marca Challenger, con tapa superior y llave.", "description": "Congelador horizontal marca Challenger, con tapa superior y llave. Ideal para almacenamiento de congelados, carnes, insumos o productos de venta.", "price": 800000, "priceText": "$800.000", "condition": "Usado / buen estado", "tags": ["Refrigeración", "Usado", "Fotos reales"], "message": "Hola, me interesa el producto 07: Congelador horizontal Challenger por $800.000. ¿Sigue disponible?", "status": "Disponible", "images": ["assets/producto-07-1.jpg", "assets/producto-07-2.jpg", "assets/producto-07-3.jpg"]}, {"item": 8, "category": "Cocina industrial", "name": "Trampa de grasas industrial 44x64x34", "short": "Trampa de grasas industrial de 80 litros en acero inoxidable 304 de alta resistencia, con rejilla para sólidos grueso...", "description": "Trampa de grasas industrial de 80 litros en acero inoxidable 304 de alta resistencia, con rejilla para sólidos gruesos, pantallas de sedimentación y conexiones visibles en fotos. Ideal para restaurante, cocina comercial o adecuación sanitaria.", "price": 800000, "priceText": "$800.000", "condition": "Usado / oportunidad", "highlight": "Oportunidad", "tags": ["Cocina industrial", "Usado", "Fotos reales"], "message": "Hola, me interesa el producto 08: Trampa de grasas industrial 44x64x34 por $800.000. ¿Sigue disponible?", "status": "Disponible", "images": ["assets/producto-08-1.jpg", "assets/producto-08-2.jpg"]}, {"item": 9, "category": "Exhibición y servicio", "name": "Vitrina / baño María en acero inoxidable", "short": "Vitrina tipo baño María y mixto en acero inoxidable (150x 90x90 cm), con cubierta en vidrio templado.", "description": "Vitrina tipo baño María y mixto en acero inoxidable (150x 90x90 cm), con cubierta en vidrio templado. Con 3 compartimientos, el del medio con espacio para baño maría con resistencia eléctrica 220V y perilla para regulación de temperatura, los compartimientos de los extremos a temp. ambiente. Ideal para exhibición y servicio de alimentos en restaurante o comidas rápidas. (Azafates disponibles con tapa para negociación).", "price": 3500000, "priceText": "$3.500.000", "condition": "Usado / buen estado", "tags": ["Exhibición y servicio", "Usado", "Fotos reales"], "message": "Hola, me interesa el producto 09: Vitrina / baño María en acero inoxidable por $3.500.000. ¿Sigue disponible?", "status": "Disponible", "images": ["assets/producto-09-1.jpg", "assets/producto-09-2.jpg"]}, {"item": 10, "category": "Mobiliario acero", "name": "Gabinete aéreo en acero inoxidable 120 × 60 × 40 cm", "short": "Gabinete aéreo en acero inoxidable con 2 puertas y otro espacio libre, 2 entrepaños en cada espacio, medidas aproxima...", "description": "Gabinete aéreo en acero inoxidable con 2 puertas y otro espacio libre, 2 entrepaños en cada espacio, medidas aproximadas: 1.20 m de largo × 0.60 m de alto × 0.40 m de profundidad. Ideal para cocina o bodega.", "price": 700000, "priceText": "$700.000", "condition": "Usado / buen estado", "tags": ["Mobiliario acero", "Usado", "Fotos reales"], "message": "Hola, me interesa el producto 10: Gabinete aéreo en acero inoxidable 120 × 60 × 40 cm por $700.000. ¿Sigue disponible?", "status": "Disponible", "images": ["assets/producto-10-1.jpg", "assets/producto-10-2.jpg"]}, {"item": 11, "category": "Mobiliario acero", "name": "Lavaplatos en acero inoxidable 130 × 60 cm", "short": "Lavaplatos y mesón de lavado en acero inoxidable de  130 × 60 cm, con módulo inferior de apoyo/almacenamiento, trampa...", "description": "Lavaplatos y mesón de lavado en acero inoxidable de  130 × 60 cm, con módulo inferior de apoyo/almacenamiento, trampa de grasas. Puertas corredizas, llave de agua incluida. Ideal para cocina comercial.", "price": 1650000, "priceText": "$1.650.000", "condition": "Usado / buen estado", "tags": ["Mobiliario acero", "Usado", "Fotos reales"], "message": "Hola, me interesa el producto 11: Lavaplatos en acero inoxidable 130 × 60 cm por $1.650.000. ¿Sigue disponible?", "status": "Disponible", "images": ["assets/producto-11-1.jpg"]}, {"item": 12, "category": "Exhibición y servicio", "name": "Baño María compacto (45x45x90 cm)", "short": "Equipo compacto tipo baño María en acero inoxidable a gas (45x45x90 cm), con cubierta en vidrio templado, ruedas y es...", "description": "Equipo compacto tipo baño María en acero inoxidable a gas (45x45x90 cm), con cubierta en vidrio templado, ruedas y espacio inferior, llave para regulación de llama. Ideal para comidas rápidas, servicio o exhibición caliente, hervidor de agua o podría adaptarse para freidor", "price": 800000, "priceText": "$800.000", "condition": "Usado / oportunidad", "highlight": "Oportunidad", "tags": ["Exhibición y servicio", "Usado", "Fotos reales"], "message": "Hola, me interesa el producto 12: Baño María compacto (45x45x90 cm) por $800.000. ¿Sigue disponible?", "status": "Disponible", "images": ["assets/producto-12-1.jpg"]}, {"item": 13, "category": "Cocina industrial", "name": "Gramera industrial digital", "short": "Gramera/báscula digital industrial para cocina o comercio.", "description": "Gramera/báscula digital industrial para cocina o comercio. Ideal para porcionar, pesar insumos y apoyar procesos de producción. Con cable para carga.", "price": 100000, "priceText": "$100.000", "condition": "Usado / funcional", "tags": ["Cocina industrial", "Usado", "Fotos reales"], "message": "Hola, me interesa el producto 13: Gramera industrial digital por $100.000. ¿Sigue disponible?", "status": "Disponible", "images": ["assets/producto-13-1.jpg"]}, {"item": 14, "category": "Cocina industrial", "name": "Campana extractora en acero inoxidable", "short": "Campana extractora en acero 430 calibre 20 para cocina industrial/restaurante (150x100x70 cm).", "description": "Campana extractora en acero 430 calibre 20 para cocina industrial/restaurante (150x100x70 cm). Tiene una capucha de aprox. 60x60 cm para abarcar más grasas y vapores, contiene las rejillas de filtro, ventilador y luz.", "price": 2800000, "priceText": "$2.800.000", "condition": "Usado / oportunidad", "highlight": "Oportunidad", "tags": ["Cocina industrial", "Usado", "Fotos reales"], "message": "Hola, me interesa el producto 14: Campana extractora en acero inoxidable por $2.800.000. ¿Sigue disponible?", "status": "Disponible", "images": ["assets/producto-14-1.jpg"]}];
+const CATEGORIES = ["Todos", "Cocina industrial", "Exhibición y servicio", "Mobiliario acero", "Refrigeración", "Tecnología"];
+const WHATSAPP_NUMBER = "573117640437"; // Si quieres botón directo al vendedor, reemplazar por 57XXXXXXXXXX sin + ni espacios.
+
+const grid = document.getElementById('grid');
+const categorySelect = document.getElementById('category');
+const empty = document.getElementById('empty');
+
+CATEGORIES.forEach(c => {
+  const opt = document.createElement('option');
+  opt.value = c; opt.textContent = c;
+  categorySelect.appendChild(opt);
+});
+
+function waLink(message, item){
+  const page = window.location.href.split('#')[0] + '#producto-' + String(item).padStart(2,'0');
+  const text = message + "\n" + page;
+  if(WHATSAPP_NUMBER.trim()) return `https://wa.me/${WHATSAPP_NUMBER.trim()}?text=${encodeURIComponent(text)}`;
+  return `https://wa.me/?text=${encodeURIComponent(text)}`;
+}
+
+function renderProducts(){
+  const q = document.getElementById('search').value.toLowerCase().trim();
+  const cat = document.getElementById('category').value;
+  const sort = document.getElementById('sort').value;
+  let list = PRODUCTS_DATA.filter(p => {
+    const hay = `${p.name} ${p.category} ${p.description} ${p.condition}`.toLowerCase();
+    return (!q || hay.includes(q)) && (cat === 'Todos' || p.category === cat);
+  });
+  if(sort === 'priceAsc') list.sort((a,b)=>a.price-b.price);
+  if(sort === 'priceDesc') list.sort((a,b)=>b.price-a.price);
+  if(sort === 'name') list.sort((a,b)=>a.name.localeCompare(b.name));
+  if(sort === 'item') list.sort((a,b)=>a.item-b.item);
+
+  grid.innerHTML = list.map(p => `
+    <article class="card" id="producto-${String(p.item).padStart(2,'0')}">
+      <div class="photo photo-gallery">
+        <div class="gallery-track" id="gallery-${p.item}" onscroll="updateCardDots(${p.item})">
+          ${p.images.map((img,i)=>`<img src="${img}" alt="${p.name} - foto ${i+1}" loading="lazy" onclick="openModal(${p.item}, ${i})">`).join('')}
+        </div>
+        ${p.images.length>1 ? `<button class="gallery-nav prev" onclick="slideCardGallery(${p.item}, -1); event.stopPropagation();" aria-label="Foto anterior">‹</button><button class="gallery-nav next" onclick="slideCardGallery(${p.item}, 1); event.stopPropagation();" aria-label="Foto siguiente">›</button>` : ``}
+        <span class="badge">Producto ${String(p.item).padStart(2,'0')}</span>
+        <span class="count">${p.images.length} foto${p.images.length>1?'s':''}</span>
+        <span class="status-pill status-${(p.status || 'Disponible').toLowerCase()}">${p.status || 'Disponible'}</span>
+        ${p.highlight ? `<span class="opportunity">${p.highlight}</span>` : ``}
+        ${p.images.length>1 ? `<div class="gallery-dots">${p.images.map((_,i)=>`<button class="gallery-dot ${i===0?'active':''}" onclick="scrollToCardImage(${p.item}, ${i}); event.stopPropagation();" aria-label="Ir a foto ${i+1}"></button>`).join('')}</div>` : ``}
+      </div>
+      <div class="content">
+        <div class="category">${p.category}</div>
+        <h2>${p.name}</h2>
+        <p class="short">${p.short}</p>
+        <div class="tags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+        <div class="price-row">
+          <div class="price">${p.priceText}</div>
+          <div class="condition">${p.condition}</div>
+        </div>
+        <div class="actions">
+          <a class="btn btn-wa" target="_blank" rel="noopener" href="${waLink(p.message,p.item)}">WhatsApp</a>
+          <button class="btn secondary" onclick="openModal(${p.item})">Ver detalle</button>
+        </div>
+      </div>
+    </article>
+  `).join('');
+  empty.style.display = list.length ? 'none' : 'block';
+}
+
+function scrollToCardImage(item, index){
+  const track = document.getElementById(`gallery-${item}`);
+  if(!track) return;
+  track.scrollTo({left: track.clientWidth * index, behavior:'smooth'});
+  updateCardDots(item, index);
+}
+
+function slideCardGallery(item, direction){
+  const track = document.getElementById(`gallery-${item}`);
+  const p = PRODUCTS_DATA.find(x=>x.item===item);
+  if(!track || !p) return;
+  const current = Math.round(track.scrollLeft / Math.max(track.clientWidth, 1));
+  const next = Math.max(0, Math.min(p.images.length - 1, current + direction));
+  scrollToCardImage(item, next);
+}
+
+function updateCardDots(item, forcedIndex=null){
+  const track = document.getElementById(`gallery-${item}`);
+  if(!track) return;
+  const index = forcedIndex ?? Math.round(track.scrollLeft / Math.max(track.clientWidth, 1));
+  const cardId = `producto-${String(item).padStart(2,'0')}`;
+  document.querySelectorAll(`#${cardId} .gallery-dot`).forEach((dot,i)=>dot.classList.toggle('active', i===index));
+}
+
+let currentModalItem = null;
+let currentModalIndex = 0;
+
+function openModal(item, index=0){
+  const p = PRODUCTS_DATA.find(x=>x.item===item);
+  if(!p) return;
+  currentModalItem = item;
+  currentModalIndex = index;
+  document.getElementById('modalTitle').textContent = `Producto ${String(p.item).padStart(2,'0')}`;
+  document.getElementById('modalName').textContent = p.name;
+  document.getElementById('modalCategory').textContent = p.category;
+  document.getElementById('modalPrice').textContent = p.priceText + ' · ' + (p.status || 'Disponible');
+  document.getElementById('modalDesc').textContent = p.description;
+  document.getElementById('modalWhats').href = waLink(p.message,p.item);
+  document.getElementById('modalTags').innerHTML = p.tags.map(t=>`<span class="tag">${t}</span>`).join('');
+  document.getElementById('modalThumbs').innerHTML = p.images.map((img,i)=>`<img src="${img}" class="${i===currentModalIndex?'active':''}" onclick="setModalImage(${i})" alt="Miniatura ${i+1}">`).join('');
+  document.getElementById('modal').classList.add('open');
+  updateModalImage();
+}
+
+function updateModalImage(){
+  const p = PRODUCTS_DATA.find(x=>x.item===currentModalItem);
+  if(!p) return;
+  const modalImg = document.getElementById('modalImg');
+  modalImg.src = p.images[currentModalIndex];
+  modalImg.alt = `${p.name} - foto ${currentModalIndex + 1}`;
+  document.getElementById('modalCounter').textContent = `${currentModalIndex + 1} / ${p.images.length}`;
+  document.querySelectorAll('.thumbs img').forEach((x,i)=>x.classList.toggle('active', i===currentModalIndex));
+  const showNav = p.images.length > 1 ? '' : 'none';
+  document.querySelectorAll('.modal-nav,.modal-counter').forEach(el=>el.style.display = showNav);
+}
+
+function setModalImage(index){
+  currentModalIndex = index;
+  updateModalImage();
+}
+
+function navigateModal(direction){
+  const p = PRODUCTS_DATA.find(x=>x.item===currentModalItem);
+  if(!p || p.images.length<2) return;
+  currentModalIndex = (currentModalIndex + direction + p.images.length) % p.images.length;
+  updateModalImage();
+}
+
+function modalPrev(event){ if(event) event.stopPropagation(); navigateModal(-1); }
+function modalNext(event){ if(event) event.stopPropagation(); navigateModal(1); }
+
+function closeModal(){ document.getElementById('modal').classList.remove('open'); }
+
+function shareCatalog(){
+  const text = "Te comparto el catálogo de Maranello con equipos y mobiliario disponibles en Cali. Información y visita por WhatsApp: " + window.location.href.split('#')[0];
+  window.open("https://wa.me/?text=" + encodeURIComponent(text), "_blank");
+}
+
+const modalImageBox = document.getElementById('modalImageBox');
+let touchStartX = 0;
+let touchStartY = 0;
+
+modalImageBox.addEventListener('touchstart', (event)=>{
+  touchStartX = event.changedTouches[0].screenX;
+  touchStartY = event.changedTouches[0].screenY;
+}, {passive:true});
+
+modalImageBox.addEventListener('touchend', (event)=>{
+  const dx = event.changedTouches[0].screenX - touchStartX;
+  const dy = event.changedTouches[0].screenY - touchStartY;
+  if(Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)){
+    dx < 0 ? navigateModal(1) : navigateModal(-1);
+  }
+}, {passive:true});
+
+document.addEventListener('keydown', (event)=>{
+  if(!document.getElementById('modal').classList.contains('open')) return;
+  if(event.key === 'ArrowLeft') navigateModal(-1);
+  if(event.key === 'ArrowRight') navigateModal(1);
+  if(event.key === 'Escape') closeModal();
+});
+
+renderProducts();
+</script>
+</body>
+</html>
